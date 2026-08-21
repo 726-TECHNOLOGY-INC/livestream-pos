@@ -24,13 +24,17 @@ if ($labelSize == "") {
 }
 
 $fname = filter_input(INPUT_GET, "fname", FILTER_SANITIZE_STRING);
-if ($fname == "") {
-    $fname = "Client";
+if ((!isset($fname)) || ($fname == "")) {
+    $clientFName = "Client";
+} else {
+    $clientFName = str_replace("&#39;", "'", str_replace("&#34;", "\"", $fname));
 }
 
 $lname = filter_input(INPUT_GET, "lname", FILTER_SANITIZE_STRING);
-if ($lname == "") {
-    $lname = "Name";
+if ((!isset($lname)) || ($lname == "")) {
+    $clientLName = "Name";
+} else {
+    $clientLName = str_replace("&#39;", "'", str_replace("&#34;", "\"", $lname));
 }
 
 $instance = "LABEL-" . date("Y-m-d-H-m-s") . ".pdf";
@@ -42,7 +46,7 @@ if (PDF_begin_document($p2, "./tags/" . $instance, "") == 0) {
 
 PDF_set_info($p2, "Creator", "print-label-pdf.php");
 PDF_set_info($p2, "Author", "726 TECHNOLOGY INC");
-PDF_set_info($p2, "Title", "CLIENT LABEL");
+PDF_set_info($p2, "Title", "CLIENT NAME LABEL");
 
 switch ($labelSize) {
     case "3x2":
@@ -52,8 +56,8 @@ switch ($labelSize) {
         $fontHelveticaBold = PDF_load_font($p2, "Helvetica-Bold", "winansi", "");
 
         PDF_setfont($p2, $fontHelveticaBold, 20.0);
-        PDF_show_xy($p2, $fname, 18, 85);
-        PDF_show_xy($p2, $lname, 18, 45);  
+        PDF_show_xy($p2, $clientFName, 18, 85);
+        PDF_show_xy($p2, $clientLName, 18, 45);  
                 
         break;
     case "3x1": default:         
@@ -63,8 +67,8 @@ switch ($labelSize) {
         $fontHelveticaBold = PDF_load_font($p2, "Helvetica-Bold", "winansi", "");
 
         PDF_setfont($p2, $fontHelveticaBold, 18.0);
-        PDF_show_xy($p2, $fname, 18, 40);
-        PDF_show_xy($p2, $lname, 18, 15);  
+        PDF_show_xy($p2, $clientFName, 18, 40);
+        PDF_show_xy($p2, $clientLName, 18, 15);  
 
         break;
 }
