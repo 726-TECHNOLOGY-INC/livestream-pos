@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
 
     http_response_code(200);
 
-    return true;
+    exit;
 }
 
 function PDF_show_xy_right(&$xypdf, &$xyfont, $xytext, $xright, $ybottom) {
@@ -25,26 +25,20 @@ function PDF_show_xy_right(&$xypdf, &$xyfont, $xytext, $xright, $ybottom) {
     PDF_show_xy($xypdf, $xytext, $xright - $width, $ybottom);
 }
 
-$labelSize = filter_input(INPUT_GET, "size", FILTER_SANITIZE_STRING);
-if ($labelSize == "") {
+$labelSize = isset($_GET["size"]) ? htmlspecialchars($_GET["size"], ENT_QUOTES, 'UTF-8') : "3x1";
+if (empty($labelSize)) {
     $labelSize = "3x1";
 }
 
-$fname = filter_input(INPUT_GET, "fname", FILTER_SANITIZE_STRING);
-if ((!isset($fname)) || ($fname == "")) {
-    $clientFName = "Client";
-} else {
-    $clientFName = str_replace("&#39;", "'", str_replace("&#34;", "\"", $fname));
-}
+$fname = isset($_GET["fname"]) ? trim($_GET["fname"]) : "";
+$clientFNameTemp = ($fname === "") ? "Client" : htmlspecialchars($fname, ENT_QUOTES, 'UTF-8');
+$clientFName = str_replace("&#39;", "'", str_replace("&#34;", "\"", $clientFNameTemp));
 
-$lname = filter_input(INPUT_GET, "lname", FILTER_SANITIZE_STRING);
-if ((!isset($lname)) || ($lname == "")) {
-    $clientLName = "Name";
-} else {
-    $clientLName = str_replace("&#39;", "'", str_replace("&#34;", "\"", $lname));
-}
+$lname = isset($_GET["lname"]) ? trim($_GET["lname"]) : "";
+$clientLNameTemp = ($lname === "") ? "Name" : htmlspecialchars($lname, ENT_QUOTES, 'UTF-8');
+$clientLName = str_replace("&#39;", "'", str_replace("&#34;", "\"", $clientLNameTemp));
 
-$instance = "LABEL-" . date("Y-m-d-H-m-s") . ".pdf";
+$instance = "LABEL-" . date("Y-m-d-H-i-s") . ".pdf";
 $p2 = PDF_new();
 
 if (PDF_begin_document($p2, "./tags/" . $instance, "") == 0) {
@@ -55,12 +49,13 @@ PDF_set_info($p2, "Creator", "print-label-pdf.php");
 PDF_set_info($p2, "Author", "726 TECHNOLOGY INC");
 PDF_set_info($p2, "Title", "CLIENT NAME LABEL");
 
+$fontHelveticaBold = PDF_load_font($p2, "Helvetica-Bold", "winansi", "");
+
 switch ($labelSize) {
     case "3x2":
         PDF_begin_page_ext($p2, 216, 144, "");
         PDF_set_parameter($p2, "textformat", "utf8");
 
-        $fontHelveticaBold = PDF_load_font($p2, "Helvetica-Bold", "winansi", "");
 
         PDF_setfont($p2, $fontHelveticaBold, 20.0);
         PDF_show_xy($p2, $clientFName, 18, 85);
@@ -70,8 +65,6 @@ switch ($labelSize) {
     case "3x1": default:         
         PDF_begin_page_ext($p2, 216, 72, "");
         PDF_set_parameter($p2, "textformat", "utf8");
-
-        $fontHelveticaBold = PDF_load_font($p2, "Helvetica-Bold", "winansi", "");
 
         PDF_setfont($p2, $fontHelveticaBold, 17.0);
         PDF_show_xy($p2, $clientFName, 18, 42);
@@ -86,4 +79,4 @@ switch ($labelSize) {
 PDF_end_page_ext($p2, "");   
 PDF_end_document($p2, "");
 
-exec("./print-label.sh " . $instance);
+exec("./print-label.sh " . escapeshellarg($instance));
