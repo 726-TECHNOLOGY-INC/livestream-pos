@@ -18,13 +18,11 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
     return true;
 }
 
-function PDF_show_xy_center(&$xypdf, &$xyfont, $xytext, $docwidth, $ybottom) {
-    if ($xytext == "") { return false; }
-
+function PDF_show_xy_right(&$xypdf, &$xyfont, $xytext, $xright, $ybottom) {
     $xyfontsize = pdf_get_value($xypdf, "fontsize", 0);
     $width = pdf_stringwidth($xypdf, $xytext, $xyfont, $xyfontsize);
 
-    PDF_show_xy($xypdf, $xytext, ($docwidth / 2) - ($width / 2), $ybottom);
+    PDF_show_xy($xypdf, $xytext, $xright - $width, $ybottom);
 }
 
 $labelSize = filter_input(INPUT_GET, "size", FILTER_SANITIZE_STRING);
