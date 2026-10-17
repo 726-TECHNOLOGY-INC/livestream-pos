@@ -1,9 +1,10 @@
 <?php 
 /*******************************************************************************
-* COPYRIGHT (C) 726 TECHNOLOGY INC, 2017 - 2025            ALL RIGHTS RESERVED *
+* COPYRIGHT (C) 726 TECHNOLOGY INC, 2017 - 2026            ALL RIGHTS RESERVED *
 *******************************************************************************/
 //
-// Print Receipt - PDF - Multi Size and Barcode Support - v7.5.26
+// Print Receipt - PDF - Multi Size and Barcode Support - v8.10.15
+// Deprecated
 //
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
@@ -15,9 +16,8 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
 
     http_response_code(200);
 
-    return true;
+    exit;
 }
-
 
 function PDF_show_xy_center(&$xypdf, &$xyfont, $xytext, $docwidth, $ybottom) {
     if ($xytext == "") { return false; }
@@ -54,7 +54,7 @@ for ($i = 1 + $offsetVal; $i <= 99 + $offsetVal; $i++) {
         die("Error: " . PDF_get_errmsg($p2));
     }
 
-    PDF_set_info($p2, "Creator", "print-receipt-pdf.php");
+    PDF_set_info($p2, "Creator", "print-number.php");
     PDF_set_info($p2, "Author", "726 TECHNOLOGY INC");
     PDF_set_info($p2, "Title", "PRINT NUMBER PDF");
 
@@ -98,9 +98,9 @@ for ($i = 1 + $offsetVal; $i <= 99 + $offsetVal; $i++) {
     PDF_end_page_ext($p2, "");   
     PDF_end_document($p2, "");
 
-    exec("./print-label.sh $instance");
+    exec("./print-label.sh " . escapeshellarg($instance));
 
-    sleep(1);
+    usleep(800000);
 }
 
 echo("Printing Complete");
