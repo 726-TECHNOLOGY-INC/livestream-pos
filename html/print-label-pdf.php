@@ -1,9 +1,9 @@
 <?php 
 /*******************************************************************************
-* COPYRIGHT (C) 726 TECHNOLOGY INC, 2017 - 2023            ALL RIGHTS RESERVED *
+* COPYRIGHT (C) 726 TECHNOLOGY INC, 2017 - 2026            ALL RIGHTS RESERVED *
 *******************************************************************************/
 //
-// Print Label - PDF - Multi Size Support - v5.6.30
+// Print Label - PDF - Multi Size Support - v8.10.15
 //
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
@@ -16,6 +16,15 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
     http_response_code(200);
 
     return true;
+}
+
+function PDF_show_xy_center(&$xypdf, &$xyfont, $xytext, $docwidth, $ybottom) {
+    if ($xytext == "") { return false; }
+
+    $xyfontsize = pdf_get_value($xypdf, "fontsize", 0);
+    $width = pdf_stringwidth($xypdf, $xytext, $xyfont, $xyfontsize);
+
+    PDF_show_xy($xypdf, $xytext, ($docwidth / 2) - ($width / 2), $ybottom);
 }
 
 $labelSize = filter_input(INPUT_GET, "size", FILTER_SANITIZE_STRING);
@@ -66,9 +75,12 @@ switch ($labelSize) {
 
         $fontHelveticaBold = PDF_load_font($p2, "Helvetica-Bold", "winansi", "");
 
-        PDF_setfont($p2, $fontHelveticaBold, 18.0);
-        PDF_show_xy($p2, $clientFName, 18, 40);
-        PDF_show_xy($p2, $clientLName, 18, 15);  
+        PDF_setfont($p2, $fontHelveticaBold, 17.0);
+        PDF_show_xy($p2, $clientFName, 18, 42);
+        PDF_show_xy($p2, $clientLName, 18, 17);  
+
+        PDF_setfont($p2, $fontHelveticaBold, 10.0);
+        PDF_show_xy_right($p2, $fontHelveticaBold, date('l'), 207, 55);
 
         break;
 }
