@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
 
     http_response_code(200);
 
-    return true;
+    exit;
 }
 
 
@@ -28,8 +28,8 @@ function PDF_show_xy_center(&$xypdf, &$xyfont, $xytext, $docwidth, $ybottom) {
     PDF_show_xy($xypdf, $xytext, ($docwidth / 2) - ($width / 2), $ybottom);
 }
 
-$labelSize = filter_input(INPUT_GET, "size", FILTER_SANITIZE_STRING);
-if ($labelSize == "") {
+$labelSize = isset($_GET["size"]) ? htmlspecialchars($_GET["size"], ENT_QUOTES, 'UTF-8') : "3x1";
+if (empty($labelSize)) {
     $labelSize = "3x1";
 }
 
@@ -78,7 +78,6 @@ switch ($labelSize) {
 PDF_end_page_ext($p2, "");   
 PDF_end_document($p2, "");
 
-exec("./print-label.sh $instance");
-
+exec("./print-label.sh " . escapeshellarg($instance));
 
 echo("Printing Complete");

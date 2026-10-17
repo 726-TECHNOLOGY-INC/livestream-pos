@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
 
     http_response_code(200);
 
-    return true;
+    exit;
 }
 
 function PDF_show_xy_right(&$xypdf, &$xyfont, $xytext, $xright, $ybottom) {
@@ -146,4 +146,4 @@ if ($labelSize !== "3x1") {
 PDF_end_page_ext($p2, "");   
 PDF_end_document($p2, "");
 
-exec("./print-label.sh $instance");
+exec("./print-label.sh " . escapeshellarg($instance));

@@ -3,7 +3,7 @@
 * COPYRIGHT (C) 726 TECHNOLOGY INC, 2017 - 2026            ALL RIGHTS RESERVED *
 *******************************************************************************/
 //
-// Print Label - PDF - Silver Chain Labels - v8.02.04
+// Print Label - PDF - Dynamic Inventory Creation - v8.10.15
 //
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
 
     http_response_code(200);
 
-    return true;
+    exit;
 }
 
 function PDF_show_xy_right(&$xypdf, &$xyfont, $xytext, $xright, $ybottom) {
@@ -74,42 +74,7 @@ PDF_set_info($p2, "Author", "726 TECHNOLOGY INC");
 PDF_set_info($p2, "Title", "GENERIC RETAIL LABEL");
 
 switch ($labelSize) {
-    case "3x1": default:         
-        PDF_begin_page_ext($p2, 216, 72, "");
-        PDF_set_parameter($p2, "textformat", "utf8");
-
-        $fontHelveticaBold = PDF_load_font($p2, "Helvetica-Bold", "winansi", "");
-
-        // headline - item name
-        PDF_setfont($p2, $fontHelveticaBold, 16.0);
-        PDF_show_xy($p2, $itemName, 12, 48);
-        
-        // lower left side - price
-        PDF_setfont($p2, $fontHelveticaBold, 20.0);
-        PDF_show_xy($p2, "$" . $price, 14, 8);  
-                        
-        // qr image
-        $qrInstance = "QR-$instance.png";
-        
-        error_log($qrInstance);
-
-        $ch = curl_init("https://726.technology/print/qr/qrcode.php?s=qr&sf=9&d=" . $qrTextEncoded);
-        $fp = fopen("tags/" . $qrInstance, "wb");
-
-        curl_setopt($ch, CURLOPT_FILE, $fp);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_exec($ch);
-        curl_close($ch);
-
-        fclose($fp);
-
-        $qrImage = PDF_load_image($p2, "png", "tags/" . $qrInstance, "");
-
-        PDF_fit_image($p2, $qrImage, 167, 22, "boxsize {46 46} fitmethod entire"); 
-        
-        break;
-    case "225x125":    
+    case "225x125": default:    
         PDF_begin_page_ext($p2, 162, 90, "");
         PDF_set_parameter($p2, "textformat", "utf8");
 
@@ -162,11 +127,13 @@ switch ($labelSize) {
         $qrImage = PDF_load_image($p2, "png", "tags/" . $qrInstance, "");
 
         PDF_fit_image($p2, $qrImage, 7, 6, "boxsize {36 36} fitmethod entire"); 
+
+        break;
 }
     
 PDF_end_page_ext($p2, "");   
 PDF_end_document($p2, "");
 
 for ($ct = 1; $ct <= $count; $ct++) {
-    exec("./print-label.sh $instance.pdf");  
+    exec("./print-label.sh " . escapeshellarg($instance));
 }
