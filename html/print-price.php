@@ -1,9 +1,10 @@
 <?php 
 /*******************************************************************************
-* COPYRIGHT (C) 726 TECHNOLOGY INC, 2017 - 2025            ALL RIGHTS RESERVED *
+* COPYRIGHT (C) 726 TECHNOLOGY INC, 2017 - 2026            ALL RIGHTS RESERVED *
 *******************************************************************************/
 //
-// Print Receipt - PDF - Multi Size and Barcode Support - v7.5.26
+// Print Price - PDF - Multi Size and Barcode Support - v8.10.15
+// Deprecated
 //
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
@@ -17,7 +18,6 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
 
     exit;
 }
-
 
 function PDF_show_xy_center(&$xypdf, &$xyfont, $xytext, $docwidth, $ybottom) {
     if ($xytext == "") { return false; }
@@ -51,9 +51,9 @@ if (PDF_begin_document($p2, "./tags/$instance", "") == 0) {
     die("Error: " . PDF_get_errmsg($p2));
 }
 
-PDF_set_info($p2, "Creator", "print-receipt-pdf.php");
+PDF_set_info($p2, "Creator", "print-price.php");
 PDF_set_info($p2, "Author", "726 TECHNOLOGY INC");
-PDF_set_info($p2, "Title", "PRINT NUMBER PDF");
+PDF_set_info($p2, "Title", "PRINT PRICE PDF");
 
 $xMargin = 8;
 
