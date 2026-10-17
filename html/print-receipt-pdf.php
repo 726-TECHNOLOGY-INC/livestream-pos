@@ -99,10 +99,7 @@ switch ($labelSize) {
         // Generate Barcode Dynamically
         $barcodeImgPath = "tags/$idValue.png";
         exec("./render-barcode.sh " . escapeshellarg($idValue));
-
-        if !(file_exists($barcodeImgPath)) { 
-            usleep(250000);
-        }
+        usleep(100000);
 
         if (file_exists($barcodeImgPath)) {
             $qrImage = PDF_load_image($p2, "png", $barcodeImgPath, "");
@@ -118,6 +115,7 @@ PDF_end_document($p2, "");
 exec("./print-label.sh " . escapeshellarg($instance));
 
 if (isset($barcodeImgPath) && file_exists($barcodeImgPath)) {
+    usleep(100000);
     unlink($barcodeImgPath);
 }
 
