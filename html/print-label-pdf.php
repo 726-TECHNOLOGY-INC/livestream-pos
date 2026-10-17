@@ -32,11 +32,11 @@ if (empty($labelSize)) {
 
 $fname = isset($_GET["fname"]) ? trim($_GET["fname"]) : "";
 $clientFNameTemp = ($fname === "") ? "Client" : htmlspecialchars($fname, ENT_QUOTES, 'UTF-8');
-$clientFName = str_replace("&#39;", "'", str_replace("&#34;", "\"", $clientFNameTemp));
+$clientFName = htmlspecialchars_decode(str_replace("&#34;", "\"", $clientFNameTemp));
 
 $lname = isset($_GET["lname"]) ? trim($_GET["lname"]) : "";
 $clientLNameTemp = ($lname === "") ? "Name" : htmlspecialchars($lname, ENT_QUOTES, 'UTF-8');
-$clientLName = str_replace("&#39;", "'", str_replace("&#34;", "\"", $clientLNameTemp));
+$clientLName = htmlspecialchars_decode(str_replace("&#34;", "\"", $clientLNameTemp));
 
 $instance = "LABEL-" . date("Y-m-d-H-i-s") . ".pdf";
 $p2 = PDF_new();
