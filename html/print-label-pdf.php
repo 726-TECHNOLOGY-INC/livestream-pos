@@ -3,7 +3,7 @@
 * COPYRIGHT (C) 726 TECHNOLOGY INC, 2017 - 2026            ALL RIGHTS RESERVED *
 *******************************************************************************/
 //
-// Print Label - PDF - Multi Size Support - v8.10.15
+// Print Name Tag Label - PDF - Multi Size Support - v8.11.09
 //
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
@@ -25,6 +25,8 @@ function PDF_show_xy_right(&$xypdf, &$xyfont, $xytext, $xright, $ybottom) {
     PDF_show_xy($xypdf, $xytext, $xright - $width, $ybottom);
 }
 
+date_default_timezone_set('America/Phoenix');
+
 $labelSize = isset($_GET["size"]) ? htmlspecialchars($_GET["size"], ENT_QUOTES, 'UTF-8') : "3x1";
 if (empty($labelSize)) {
     $labelSize = "3x1";
@@ -37,6 +39,14 @@ $clientFName = htmlspecialchars_decode(str_replace("&#34;", "\"", $clientFNameTe
 $lname = isset($_GET["lname"]) ? trim($_GET["lname"]) : "";
 $clientLNameTemp = ($lname === "") ? "Name" : htmlspecialchars($lname, ENT_QUOTES, 'UTF-8');
 $clientLName = htmlspecialchars_decode(str_replace("&#34;", "\"", $clientLNameTemp));
+
+$origin = isset($_GET["origin"]) ? trim($_GET["origin"]) : ""; 
+$originNameTemp = ($origin === "") ? "" : htmlspecialchars($origin, ENT_QUOTES, 'UTF-8');
+$originName = htmlspecialchars_decode(str_replace("&#34;", "\"", $originNameTemp));
+
+$stage = isset($_GET["stage"]) ? trim($_GET["stage"]) : ""; 
+$stageNameTemp = ($stage === "") ? "" : htmlspecialchars($stage, ENT_QUOTES, 'UTF-8');
+$stageName = " " . htmlspecialchars_decode(str_replace("&#34;", "\"", $stageNameTemp));
 
 $instance = "LABEL-" . date("Y-m-d-H-i-s") . ".pdf";
 $p2 = PDF_new();
@@ -70,8 +80,9 @@ switch ($labelSize) {
         PDF_show_xy($p2, $clientFName, 18, 42);
         PDF_show_xy($p2, $clientLName, 18, 17);  
 
-        PDF_setfont($p2, $fontHelveticaBold, 10.0);
-        PDF_show_xy_right($p2, $fontHelveticaBold, date('l'), 207, 55);
+        PDF_setfont($p2, $fontHelveticaBold, 9.0);
+        PDF_show_xy_right($p2, $fontHelveticaBold, $originName, 207, 62);
+        PDF_show_xy_right($p2, $fontHelveticaBold, date('l') . $stageName, 207, 50);
 
         break;
 }

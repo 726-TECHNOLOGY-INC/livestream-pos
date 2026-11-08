@@ -3,7 +3,7 @@
 * COPYRIGHT (C) 726 TECHNOLOGY INC, 2017 - 2026            ALL RIGHTS RESERVED *
 *******************************************************************************/
 //
-// Print Label - PDF - Dynamic Inventory Creation - v8.10.15
+// Print Sticker - PDF - Dynamic Inventory Creation - v8.10.15
 //
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
