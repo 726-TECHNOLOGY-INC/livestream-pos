@@ -77,12 +77,12 @@ switch ($labelSize) {
         PDF_set_parameter($p2, "textformat", "utf8");
 
         PDF_setfont($p2, $fontHelveticaBold, 17.0);
-        PDF_show_xy($p2, $clientFName, 18, 42);
-        PDF_show_xy($p2, $clientLName, 18, 17);  
+        PDF_show_xy($p2, $clientFName, 6, 36);
+        PDF_show_xy($p2, $clientLName, 6, 14);  
 
         PDF_setfont($p2, $fontHelveticaBold, 9.0);
-        PDF_show_xy_right($p2, $fontHelveticaBold, $originName, 207, 62);
-        PDF_show_xy_right($p2, $fontHelveticaBold, date('l') . $stageName, 207, 50);
+        PDF_show_xy($p2, $originName, 6, 62);
+        PDF_show_xy_right($p2, $fontHelveticaBold, date('l') . $stageName, 202, 62);
 
         break;
 }
