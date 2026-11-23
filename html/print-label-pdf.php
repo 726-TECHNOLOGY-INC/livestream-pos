@@ -48,7 +48,7 @@ $stage = isset($_GET["stage"]) ? trim($_GET["stage"]) : "";
 $stageNameTemp = ($stage === "") ? "" : htmlspecialchars($stage, ENT_QUOTES, 'UTF-8');
 $stageName = " " . htmlspecialchars_decode(str_replace("&#34;", "\"", $stageNameTemp));
 
-$instance = "LABEL-" . date("Y-m-d-H-i-s") . ".pdf";
+$instance = "LABEL-" . $fname . "-" . $lname . "-" . date("Y-m-d-H-i-s") . ".pdf";
 $p2 = PDF_new();
 
 if (PDF_begin_document($p2, "./tags/" . $instance, "") == 0) {
